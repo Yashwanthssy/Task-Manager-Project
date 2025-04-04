@@ -1,38 +1,36 @@
 const express = require('express');
-const Task = require('../models/Task'); // Import Task model
+const Task = require('../models/Task');
 
 const router = express.Router();
 
-// ✅ 1. Get All Tasks
+// Get all tasks
 router.get('/tasks', async (req, res) => {
   try {
-    const tasks = await Task.find(); // Fetch all tasks
+    const tasks = await Task.find();
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// ✅ 2. Create a New Task
+// Create a new task
 router.post('/tasks', async (req, res) => {
   try {
-    const newTask = new Task({
-      title: req.body.title
-    });
-    const savedTask = await newTask.save(); // Save to DB
+    const newTask = new Task({ title: req.body.title });
+    const savedTask = await newTask.save();
     res.status(201).json(savedTask);
   } catch (err) {
     res.status(400).json({ error: 'Invalid data' });
   }
 });
 
-// ✅ 3. Update a Task (Mark as Completed)
+// Update a task
 router.put('/tasks/:id', async (req, res) => {
   try {
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
       { completed: req.body.completed },
-      { new: true } // Return updated task
+      { new: true }
     );
     res.json(updatedTask);
   } catch (err) {
@@ -40,7 +38,7 @@ router.put('/tasks/:id', async (req, res) => {
   }
 });
 
-// ✅ 4. Delete a Task
+// Delete a task
 router.delete('/tasks/:id', async (req, res) => {
   try {
     await Task.findByIdAndDelete(req.params.id);
